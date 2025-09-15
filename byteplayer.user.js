@@ -222,33 +222,33 @@
         const audioSrc = audioElement.src;
         // the html for the player
         const theHtml = `
-    <div class="moseni-swag-playr">
-        <div id="cover">
-            <div>
-                <img src="https://moseni.wtf/imagems/media_player/qblock.png" id="cover-img">
+            <div class="moseni-swag-playr">
+                <div id="cover">
+                    <div>
+                        <img src="https://moseni.wtf/imagems/media_player/qblock.png" id="cover-img">
+                    </div>
+                    <div class="play-icon" id="playIcon">▶</div>
+                </div>
+                
+                <div class="cover-blur" aria-hidden="true">
+                    <img src="https://moseni.wtf/imagems/media_player/qblock.png" id="blur-img" alt="">
+                </div>
+        
+                <div class="info">
+                    <div class="metadata">
+                        <div id="songTitle">swag</div>
+                        <div id="songArtist">pikidiary</div>
+                    </div>
+                    <div class="timeBeat">
+                        <div class="time">0:00</div>
+                        <div id="beats"></div>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+                <audio preload="metadata" style="display: none;"></audio>
             </div>
-            <div class="play-icon" id="playIcon">▶</div>
-        </div>
-
-        <div class="cover-blur" aria-hidden="true">
-            <img src="https://moseni.wtf/imagems/media_player/qblock.png" id="blur-img" alt="">
-        </div>
-
-        <div class="info">
-            <div class="metadata">
-                <div id="songTitle">swag</div>
-                <div id="songArtist">pikidiary</div>
-            </div>
-            <div class="timeBeat">
-                <div class="time">0:00</div>
-                <div id="beats"></div>
-            </div>
-            <div class="progress">
-                <div class="progress-fill"></div>
-            </div>
-        </div>
-        <audio preload="metadata" style="display: none;"></audio>
-    </div>
 `;
 
         // just a bunch of variables for it
