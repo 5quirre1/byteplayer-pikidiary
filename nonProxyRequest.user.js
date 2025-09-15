@@ -237,8 +237,8 @@
         
                 <div class="info">
                     <div class="metadata">
-                        <div id="songTitle">swag</div>
-                        <div id="songArtist">pikidiary</div>
+                        <div id="songTitle">Audio File</div>
+                        <div id="songArtist">Click the lucky block.</div>
                     </div>
                     <div class="timeBeat">
                         <div class="time">0:00</div>
