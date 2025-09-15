@@ -16,6 +16,14 @@
     const metronome2 = new Audio("https://moseni.wtf//js/byteplayer/sfx/metronome2.ogg");
     const metronome_click = new Audio("https://moseni.wtf//js/byteplayer/sfx/metronome_click.ogg");
 
+    let id3 = null;
+    const loadID3 = async () => {
+        if (!id3) {
+            id3 = await import('https://cdn.jsdelivr.net/npm/id3js@2.0.0/lib/id3.js');
+        }
+        return id3;
+    };
+
     // css 
     const theCss = `
         .moseni-swag-playr {
@@ -191,6 +199,22 @@
     const style = document.createElement('style');
     style.textContent = theCss;
     document.head.appendChild(style);
+
+    // get metadata
+    async function fetchMetadata(url) {
+        try {
+            const response = await fetch("https://corsproxy.io/?url=" + url);
+            const arrayBuffer = await response.arrayBuffer();
+            const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
+            const id3 = await loadID3();
+            const tags = await id3.fromFile(blob);
+            return tags || { title: 'unknown', artist: 'unknown' };
+        } catch (err) {
+            console.warn("Failed to fetch metadata:", err);
+            return { title: 'unknown', artist: 'unknown' };
+        }
+    }
+
     // format
     function formatTime(sec) {
         if (!isFinite(sec) || isNaN(sec)) return "0:00";
@@ -218,8 +242,9 @@
     }
 
     // create the new player
-    function createIt(audioElement) {
+    async function createIt(audioElement) {
         const audioSrc = audioElement.src;
+        const metadata = await fetchMetadata(audioSrc);
         // the html for the player
         const theHtml = `
             <div class="moseni-swag-playr">
@@ -236,8 +261,8 @@
         
                 <div class="info">
                     <div class="metadata">
-                        <div id="songTitle">swag</div>
-                        <div id="songArtist">pikidiary</div>
+                        <div id="songTitle">${metadata.title || 'unknown'}</div>
+                        <div id="songArtist">${metadata.artist || 'unknown'}</div>
                     </div>
                     <div class="timeBeat">
                         <div class="time">0:00</div>
@@ -508,14 +533,14 @@
 
     // replace all the audio stuff with our brand new swag ine
     function replaceShits() {
-        const audioContainers = document.querySelectorAll('.media-audio:not(.custom-replaced)');
-        audioContainers.forEach(container => {
+        const audioContainers = document.querySelectorAll('.media-audio:not(.replacedd)');
+        audioContainers.forEach(async (container) => {
             const audioElement = container.querySelector('audio');
             if (!audioElement || !audioElement.src) return;
-            container.classList.add('custom-replaced');
-            const customPlayer = createIt(audioElement);
+            container.classList.add('replacedd');
+            const customPlayer = await createIt(audioElement);
             const mediaItem = container.closest('.media-item');
-            if (mediaItem) {
+            if (mediaItem && mediaItem.parentNode) {
                 mediaItem.parentNode.replaceChild(customPlayer, mediaItem);
             }
         });
