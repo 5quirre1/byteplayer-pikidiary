@@ -1,9 +1,9 @@
-// @moseni on pikidiary made the original!!!! go check it out!111! - https://moseni.wtf/js/byteplayer 
+// @moseni on pikidiary made the original!!!! go check it out!111! - https://moseni.wtf/js/byteplayer
 //////////////////////////////////////////////////////////////////////////
 // ==UserScript==
 // @name         byteplayer
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  uses moseni's design and shit for the audio player on pikidiary
 // @author       @squirrel
 // @match        https://pikidiary.lol/*
@@ -24,7 +24,7 @@
         return id3;
     };
 
-    // css 
+    // css
     const theCss = `
         .moseni-swag-playr {
             position: relative;
@@ -203,17 +203,21 @@
     // get metadata
     async function fetchMetadata(url) {
         try {
-            const response = await fetch("https://corsproxy.io/?url=" + url);
+            // remove proxy url so jax doesn't kill
+            const d = url.replace(/^https:\/\/proxy\.pikidiary\.lol\/\?url=/, '');
+
+            const response = await fetch("https://corsproxy.io/?url=" + d);
             const arrayBuffer = await response.arrayBuffer();
             const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
             const id3 = await loadID3();
             const tags = await id3.fromFile(blob);
             return tags || { title: 'unknown', artist: 'unknown' };
         } catch (err) {
-            console.warn("Failed to fetch metadata:", err);
+            console.warn("failed to fetch metadata:", err);
             return { title: 'unknown', artist: 'unknown' };
         }
     }
+
 
     // format
     function formatTime(sec) {
@@ -254,11 +258,11 @@
                     </div>
                     <div class="play-icon" id="playIcon">▶</div>
                 </div>
-                
+
                 <div class="cover-blur" aria-hidden="true">
                     <img src="https://moseni.wtf/imagems/media_player/qblock.png" id="blur-img" alt="">
                 </div>
-        
+
                 <div class="info">
                     <div class="metadata">
                         <div id="songTitle">${metadata.title || 'unknown'}</div>
